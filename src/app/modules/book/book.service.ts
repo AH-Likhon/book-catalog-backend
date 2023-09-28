@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Book, Prisma } from '@prisma/client';
 import prisma from '../../../shared/prisma';
-import { IBookFilterableFields } from './book.interface';
+import { IBookFieldsUpdate, IBookFilterableFields } from './book.interface';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { bookSearchableFields } from './book.constant';
@@ -10,6 +10,7 @@ const createBook = async (data: Book): Promise<Book> => {
   const result = await prisma.book.create({
     data,
   });
+
   return result;
 };
 
@@ -149,6 +150,7 @@ const getBooksByCategoryId = async (
             createdAt: 'desc',
           },
   });
+
   return {
     meta: {
       total,
@@ -163,6 +165,18 @@ const getSingleBook = async (id: string) => {
   const result = await prisma.book.findUnique({
     where: { id },
   });
+
+  return result;
+};
+
+const updateBook = async (id: string, payload: Partial<IBookFieldsUpdate>) => {
+  const result = await prisma.book.update({
+    where: {
+      id,
+    },
+    data: payload,
+  });
+
   return result;
 };
 
@@ -171,4 +185,5 @@ export const BookService = {
   getAllBooks,
   getBooksByCategoryId,
   getSingleBook,
+  updateBook,
 };
