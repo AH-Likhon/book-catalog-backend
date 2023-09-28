@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import prisma from '../../../shared/prisma';
 import { userReturnFields, userSearchableFields } from './user.constants';
@@ -74,7 +74,24 @@ const getSingleUser = async (id: string) => {
   return result;
 };
 
+const updateSingleUser = async (id: string, payload: Partial<User>) => {
+  const findEmail = await prisma.user.findFirst({
+    where: { id },
+    select: { email: true },
+  });
+
+  const result = await prisma.user.update({
+    where: {
+      email: findEmail?.email,
+    },
+    data: payload,
+    select: userReturnFields,
+  });
+  return result;
+};
+
 export const UserService = {
   getAllUser,
   getSingleUser,
+  updateSingleUser,
 };

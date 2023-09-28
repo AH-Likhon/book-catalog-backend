@@ -30,7 +30,22 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+export const updateSingleUser = catchAsync(
+  async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const payload = req.body;
+    const result = await UserService.updateSingleUser(id, payload);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Updated user successfully',
+      data: result,
+    });
+  }
+);
+
 export const UserController = {
   getAllUser,
   getSingleUser,
+  updateSingleUser,
 };
