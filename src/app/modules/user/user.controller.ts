@@ -11,6 +11,7 @@ const getAllUser = catchAsync(async (req: Request, res: Response) => {
   const filters = pick(req.query, userFilterableFields);
   const options = pick(req.query, paginationFields);
   const result = await UserService.getAllUser(filters, options);
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -22,6 +23,7 @@ const getAllUser = catchAsync(async (req: Request, res: Response) => {
 const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const result = await UserService.getSingleUser(id);
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -35,6 +37,7 @@ export const updateSingleUser = catchAsync(
     const id = req.params.id;
     const payload = req.body;
     const result = await UserService.updateSingleUser(id, payload);
+
     sendResponse(res, {
       success: true,
       statusCode: httpStatus.OK,
@@ -44,8 +47,21 @@ export const updateSingleUser = catchAsync(
   }
 );
 
+export const deleteUser = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await UserService.deleteUser(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User deleted successfully',
+    data: result,
+  });
+});
+
 export const UserController = {
   getAllUser,
   getSingleUser,
   updateSingleUser,
+  deleteUser,
 };
