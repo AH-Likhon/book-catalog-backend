@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.createUser(req.body);
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
