@@ -10,6 +10,7 @@ import { paginationFields } from '../../../constants/pagination';
 const createBook = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const result = await BookService.createBook(data);
+  
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -22,6 +23,7 @@ const getAllBooks = catchAsync(async (req: Request, res: Response) => {
   const filterableFields = pick(req.query, bookFilterableFields);
   const options = pick(req.query, paginationFields);
   const result = await BookService.getAllBooks(filterableFields, options);
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -31,7 +33,26 @@ const getAllBooks = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getBooksByCategoryId = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.categoryId;
+  const filterableFields = pick(req.query, bookFilterableFields);
+  const options = pick(req.query, paginationFields);
+  const result = await BookService.getBooksByCategoryId(
+    id,
+    filterableFields,
+    options
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Books with associated category data fetched successfully',
+    data: result,
+  });
+});
+
 export const BookController = {
   createBook,
   getAllBooks,
+  getBooksByCategoryId,
 };
