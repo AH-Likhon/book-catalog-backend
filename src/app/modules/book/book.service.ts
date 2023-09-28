@@ -159,8 +159,16 @@ const getBooksByCategoryId = async (
   };
 };
 
+const getSingleBook = async (id: string) => {
+  const result = await prisma.book.findUnique({
+    where: { id },
+  });
+  return result;
+};
+
 export const BookService = {
   createBook,
   getAllBooks,
   getBooksByCategoryId,
+  getSingleBook,
 };

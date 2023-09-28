@@ -10,7 +10,7 @@ import { paginationFields } from '../../../constants/pagination';
 const createBook = catchAsync(async (req: Request, res: Response) => {
   const data = req.body;
   const result = await BookService.createBook(data);
-  
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -51,8 +51,21 @@ const getBooksByCategoryId = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getSingleBook = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await BookService.getSingleBook(id);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Single Book fetched successfully',
+    data: result,
+  });
+});
+
 export const BookController = {
   createBook,
   getAllBooks,
   getBooksByCategoryId,
+  getSingleBook,
 };
