@@ -64,6 +64,17 @@ const getAllUser = async (
   };
 };
 
+const getSingleUser = async (id: string) => {
+  const result = await prisma.user.findFirst({
+    where: {
+      id,
+    },
+    select: userReturnFields,
+  });
+  return result;
+};
+
 export const UserService = {
   getAllUser,
+  getSingleUser,
 };
