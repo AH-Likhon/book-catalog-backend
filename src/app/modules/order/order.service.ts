@@ -1,3 +1,5 @@
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
 import { OrderBooks, createOrderBody } from './order.interface';
 
@@ -60,4 +62,40 @@ const getAllOrder = async (role: string, userId: string) => {
   }
 };
 
-export const OrderService = { createOrder, getAllOrder };
+const getSingleOrder = async (role: string, id: string, params: string) => {
+  if (role === 'admin') {
+    return prisma.order.findUnique({
+      where: { id: params },
+      include: {
+        orderBooks: {
+          select: {
+            bookId: true,
+            quantity: true,
+          },
+        },
+      },
+    });
+  } else if (role === 'customer') {
+    const getOrder = await prisma.order.findUnique({ where: { id: params } });
+
+    if (getOrder?.userId !== id) {
+      throw new ApiError(
+        httpStatus.BAD_REQUEST,
+        "UserId mismatch with order's userId"
+      );
+    }
+    return prisma.order.findUnique({
+      where: { id: params },
+      include: {
+        orderBooks: {
+          select: {
+            bookId: true,
+            quantity: true,
+          },
+        },
+      },
+    });
+  }
+};
+
+export const OrderService = { createOrder, getAllOrder, getSingleOrder };
